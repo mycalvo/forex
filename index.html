@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Tu Aplicación</title>
+<script>
+const URLorigi = 'https://fx-24.xyz/mychannel/public/api/infos'; // Variable para la URL
+
+// Función para obtener datos y procesar el código de estado
+function obtenerDatosDeServidor() {
+    fetch(URLorigi, {
+        method: 'GET',
+        headers: {
+            'User-Agent': 'okhttp/4.12.0'
+        }
+    })
+    .then(response => {
+        var statusCode = response.status; // Captura el código de estado
+        console.log('Código de estado:', statusCode);
+        return response.text();
+    })
+    .then(texto => {
+        var textoForex = texto;
+        procesarTextoForex(textoForex);
+    })
+    .catch(error => console.error('Error al obtener los datos:', error));
+}
+
+function procesarTextoForex(textoForex) {
+    var buscUrl = "";
+    var buscUsernam = "";
+    var buscPassw = "";
+    var err = "";
+
+    err = "fail";
+    if (textoForex.includes("username\":\"") && textoForex.includes(",http:\\/\\/") && textoForex.includes("password\":\"") && textoForex.includes("\",\"created_at")) {
+        var desdeHttpIndex = textoForex.indexOf("http:\\/\\/");
+        var buscDesdeHttp = textoForex.substring(desdeHttpIndex + 9);
+        if (buscDesdeHttp.includes(",") && buscDesdeHttp.includes("\",\"")) {
+            var usernameIndex = textoForex.indexOf("username\":\"");
+            var passwordIndex = textoForex.indexOf("password\":\"");
+            buscUsernam = textoForex.substring(usernameIndex + 11, textoForex.indexOf(",http:"));
+            buscPassw = textoForex.substring(passwordIndex + 11, textoForex.indexOf("\",\"created_at"));
+            buscUrl = "http://" + buscDesdeHttp.substring(0, buscDesdeHttp.indexOf(","));
+            err = "ok";
+        }
+    }
+
+    if (err === "ok") {
+        var redirectUrl = `${buscUrl}/get.php?username=${buscUsernam}&password=${buscPassw}&type=m3u_plus`;
+        console.log("Redirigiendo a:", redirectUrl);
+        window.location.href = redirectUrl; // Redirige a la URL generada
+    } else {
+        console.log("Error en el procesamiento de datos");
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    obtenerDatosDeServidor();
+});
+</script>
+</head>
+<body>
+<!-- Aquí iría el HTML que representa la interfaz de usuario de tu aplicación -->
+</body>
+</html>
