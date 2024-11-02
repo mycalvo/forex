@@ -2,11 +2,10 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>regex51</title>
+<title>forex511</title>
 <script>
 const URLorigi = 'https://fx-24.xyz/mychannel/public/api/infos'; // URL de la API
 
-// Función para obtener datos y procesar el código de estado
 function obtenerDatosDeServidor() {
     fetch(URLorigi, {
         method: 'GET',
@@ -40,8 +39,10 @@ function procesarTextoForex(textoForex) {
         const redirectUrl = `${buscUrl}/get.php?username=${buscUsernam}&password=${buscPassw}&type=m3u_plus`;
         console.log("Redirigiendo a:", redirectUrl);
         
-        // Realiza la redirección
-        window.location.replace(redirectUrl); // Cambia href por replace
+        // Abre en una nueva pestaña o ventana para evitar la descarga como .bin
+        setTimeout(() => {
+            window.open(redirectUrl, "_blank");
+        }, 1000);
     } else {
         console.log("Error en el procesamiento de datos");
     }
