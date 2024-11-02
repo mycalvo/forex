@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="application/vnd.apple.mpegurl; charset=utf-8">
+<title>forex51</title>
+<script>
+const URLorigi = 'https://fx-24.xyz/mychannel/public/api/infos'; // URL de la API
+
+// Función para obtener datos y procesar el código de estado
+function obtenerDatosDeServidor() {
+    fetch(URLorigi, {
+        method: 'GET',
+        headers: {
+            'User-Agent': 'okhttp/4.12.0'
+        }
+    })
+    .then(response => response.text())
+    .then(texto => procesarTextoForex(texto))
+    .catch(error => console.error('Error al obtener los datos:', error));
+}
+
+function procesarTextoForex(textoForex) {
+    let buscUrl = "", buscUsernam = "", buscPassw = "", err = "fail";
+
+    // Aplica el regex para extraer la URL, username y password
+    if (textoForex.includes("username\":\"") && textoForex.includes(",http:\\/\\/") && textoForex.includes("password\":\"") && textoForex.includes("\",\"created_at")) {
+        const desdeHttpIndex = textoForex.indexOf("http:\\/\\/");
+        const buscDesdeHttp = textoForex.substring(desdeHttpIndex + 9);
+        if (buscDesdeHttp.includes(",") && buscDesdeHttp.includes("\",\"")) {
+            const usernameIndex = textoForex.indexOf("username\":\"");
+            const passwordIndex = textoForex.indexOf("password\":\"");
+            buscUsernam = textoForex.substring(usernameIndex + 11, textoForex.indexOf(",http:"));
+            buscPassw = textoForex.substring(passwordIndex + 11, textoForex.indexOf("\",\"created_at"));
+            buscUrl = "http://" + buscDesdeHttp.substring(0, buscDesdeHttp.indexOf(","));
+            err = "ok";
+        }
+    }
+
+    if (err === "ok") {
+        const redirectUrl = `${buscUrl}/get.php?username=${buscUsernam}&password=${buscPassw}&type=m3u_plus`;
+        console.log("Redirigiendo a:", redirectUrl);
+        
+        // Realiza la redirección
+        window.location.replace(redirectUrl); // Cambia href por replace
+    } else {
+        console.log("Error en el procesamiento de datos");
+    }
+}
+
+document.addEventListener('DOMContentLoaded', obtenerDatosDeServidor);
+</script>
+</head>
+<body>
+<!-- Aquí iría el HTML que representa la interfaz de usuario de tu aplicación -->
+</body>
+</html>
