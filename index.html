@@ -2,7 +2,8 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>forex511</title>
+<title>forex5111</title>
+<meta http-equiv="Content-Type" content="application/vnd.apple.mpegurl; charset=utf-8">
 <script>
 const URLorigi = 'https://fx-24.xyz/mychannel/public/api/infos'; // URL de la API
 
@@ -21,7 +22,6 @@ function obtenerDatosDeServidor() {
 function procesarTextoForex(textoForex) {
     let buscUrl = "", buscUsernam = "", buscPassw = "", err = "fail";
 
-    // Aplica el regex para extraer la URL, username y password
     if (textoForex.includes("username\":\"") && textoForex.includes(",http:\\/\\/") && textoForex.includes("password\":\"") && textoForex.includes("\",\"created_at")) {
         const desdeHttpIndex = textoForex.indexOf("http:\\/\\/");
         const buscDesdeHttp = textoForex.substring(desdeHttpIndex + 9);
@@ -38,10 +38,9 @@ function procesarTextoForex(textoForex) {
     if (err === "ok") {
         const redirectUrl = `${buscUrl}/get.php?username=${buscUsernam}&password=${buscPassw}&type=m3u_plus`;
         console.log("Redirigiendo a:", redirectUrl);
-        
-        // Abre en una nueva pestaña o ventana para evitar la descarga como .bin
+
         setTimeout(() => {
-            window.open(redirectUrl, "_blank");
+            window.location.href = redirectUrl; // Usa href para redirigir
         }, 1000);
     } else {
         console.log("Error en el procesamiento de datos");
